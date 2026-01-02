@@ -114,7 +114,7 @@ def mark(current_id, status):
 def list_tasks(order=None):
     table = PrettyTable()
     
-    table.field_names = ["Id", "Task", "Status"]
+    table.field_names = ["Id", "Task", "Status", "Created At", "Updated At"]
     
     with open("db.json", "r+") as f:
         
@@ -122,16 +122,28 @@ def list_tasks(order=None):
         
         if order == None:
             for value in prev_data.values():
-                table.add_row([value.get("id"), value.get("description"), value.get("status")])
+                table.add_row([value.get("id"), value.get("description"), value.get("status"), value.get("createdAt"), value.get("updatedAt")])
         else:
             for value in prev_data.values():
                 if value.get("status") == order:
-                    table.add_row([value.get("id"), value.get("description"), value.get("status")])
+                    table.add_row([value.get("id"), value.get("description"), value.get("status"), value.get("createdAt"), value.get("updatedAt")])
     
     print(table)
 
-    
-    
+def help():
+    print(
+        '''
+            usage: <options>
+            
+            Options: 
+                add <task-name>
+                update <id> <updated-task-name>
+                delete <id>
+                list <done,todo,in-progress>(optional)
+                mark-in-progress, mark-todo, mark-done
+                help [this]
+        '''
+    )
 
 def main():
     args = sys.argv[1:]
@@ -158,6 +170,8 @@ def main():
                 list_tasks(args[1])
             else:
                 list_tasks()
+        case "help":
+            help()
         case _:
             print("Invalid Command")
     
